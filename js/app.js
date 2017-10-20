@@ -1,6 +1,5 @@
 (function() {
   'use strict';
-
   const movies = [];
 
   const renderMovies = function() {
@@ -56,5 +55,39 @@
     }
   };
 
-  // ADD YOUR CODE HERE
+  //////////////* My code */////////////////
+  //On click movie title
+
+  var count = 0;
+
+  $('#searchBtn').on('click', function(event){
+    event.preventDefault() 
+    count++;
+    
+    if(count % 2 === 0){
+      location.reload();  
+    }
+    var searchResults = $('#search')[0].value;
+    
+    var movie = 'https://omdb-api.now.sh/?s='+ searchResults;
+
+    //Get Http Request
+    var $xhr = $.getJSON(movie);
+    $xhr.done(function(data) {
+      if ($xhr.status !== 200) {
+          return;
+      }
+      console.log('Data',data.Search)
+      for(var i = 0; i< data.Search.length; i++){
+        var obj = {
+          Id: data.Search[i].imdbID,
+          poster: data.Search[i].Poster,
+          title: data.Search[i].Title,
+          year: data.Search[i].Year,
+        }
+        movies.push(obj);
+      }
+      renderMovies(movies);
+    });
+  })
 })();
